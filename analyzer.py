@@ -1,10 +1,10 @@
 import pandas as pd
+import requests
 import os
 import matplotlib.pyplot as plt
 from datetime import datetime
 
 DATA_PATH = 'data/matches.csv'
-PICKS_DIR = 'data/picks'
 
 def fetch_latest_matches():
     os.makedirs('data', exist_ok=True)
@@ -53,22 +53,3 @@ def get_recent_matches_plot():
         plt.close()
     except Exception as e:
         print(f"Błąd tworzenia wykresu: {e}")
-
-def save_user_pick(username, team, date, odds, pick):
-    os.makedirs(PICKS_DIR, exist_ok=True)
-    filepath = os.path.join(PICKS_DIR, f'{username}_picks.csv')
-    new_entry = pd.DataFrame([{'user': username, 'date': date, 'team': team, 'odds': odds, 'pick': pick}])
-    if os.path.exists(filepath):
-        df = pd.read_csv(filepath)
-        df = pd.concat([df, new_entry], ignore_index=True)
-    else:
-        df = new_entry
-    df.to_csv(filepath, index=False)
-
-def export_user_picks(username):
-    filepath = os.path.join(PICKS_DIR, f'{username}_picks.csv')
-    export_path = os.path.join(PICKS_DIR, f'{username}_export.xlsx')
-    if os.path.exists(filepath):
-        df = pd.read_csv(filepath)
-        df.to_excel(export_path, index=False)
-    return export_path
